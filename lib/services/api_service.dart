@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_paystack_api/models/api_response.dart';
+import 'package:flutter_paystack_api/utils/keys.dart';
 
 class ApiService {
   final Dio _dio = Dio();
@@ -11,6 +12,7 @@ class ApiService {
     headers: {
       "Accept": "application/json",
       "Content-Type": "application/json",
+      "Authorization": "Bearer ${SecretKey.secretKey}",
     },
   );
 

@@ -1,7 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_paystack_api/utils/enums.dart';
+import 'package:flutter_paystack_api/utils/utils.dart';
+import 'package:flutter_paystack_api/views/screens/payment_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_paystack_api/models/product.dart';
+
+import 'payment_method.dart';
 
 class ProductCard extends ConsumerWidget {
   final Product product;
@@ -91,7 +96,36 @@ class ProductCard extends ConsumerWidget {
             bottom: 0,
             right: 0,
             child: InkWell(
-              onTap: () {},
+              onTap: () {
+                showBottomSheet(
+                  context: context,
+                  builder: (context) => PaymentMethod(
+                    onChannelSeleted: (Channel value) {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => PaymentScreen(
+                            reference: Utils.uniqueRefenece(10),
+                            currency: "GHS",
+                            email: "ljsharp30@gmail.com",
+                            amount: product.price!
+                                .toString()
+                                .split(".")
+                                .join(), //GHS 700.93 (decimal) should be GHS 70093 (integer)
+                            onCompletedTransaction: (data) {
+                              debugPrint(
+                                  "Completed Transaction:: ${data.toString()}");
+                            },
+                            onFailedTransaction: (data) {
+                              debugPrint(
+                                  "Failed Transaction:: ${data.toString()}");
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                );
+              },
               child: Card(
                 color: Colors.black,
                 elevation: 0,
@@ -108,7 +142,7 @@ class ProductCard extends ConsumerWidget {
                     "Buy now",
                     style: Theme.of(context)
                         .textTheme
-                        .button!
+                        .labelLarge!
                         .copyWith(color: Colors.white),
                   ),
                 ),

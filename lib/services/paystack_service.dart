@@ -35,7 +35,7 @@ class PaystackService {
 
       if (response.statusCode == 200) {
         return PaystackAuthResponse.fromJson(
-            response.data as Map<String, String>);
+            response.data as Map<String, dynamic>);
       } else {
         throw Exception(response.error.toString());
       }
@@ -57,7 +57,8 @@ class PaystackService {
           await _apiService.get(url: Constants.verifyTransaction(reference));
       if (response.statusCode == 200) {
         final data = response.data as Map<String, dynamic>;
-        if (data["gateway_response"] == "Successful") {
+        if (data["gateway_response"] == "Successful" ||
+            data["gateway_response"] == "Approved") {
           // notify the user why the transaction was successful
           onSuccessfulTransaction(data);
         } else {
